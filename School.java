@@ -9,39 +9,39 @@ class Address {
         this.city = city;
     }
 }
-
+enum Gender{
+	Male,
+	Female
+	};
 class Person {
     String name;
     Address address;
-    int age;
-    String gender;
-
-    public Person(String name, Address address, int age, String gender) {
+    byte age;
+    Gender gender;
+    public Person(String name, Address address, byte age, byte gen) {
         this.name = name;
         this.address = address;
         this.age = age;
-        this.gender = gender;
+        this.gender =Gender.values()[gen-1];
     }
 }
 
 class Teacher extends Person {
-    private int leavedays;
-    private double salary;
-    public Teacher(String name, Address address, int age, String gender,double salary) {
+    private byte leavedays;
+    private int salary;
+    public Teacher(String name, Address address, byte age, byte gender,int salary) {
         super(name, address, age, gender);
         this.leavedays = 0;
         this.salary=salary;
     }
 
-    public double getMonthlySalary() {
+    public int getMonthlySalary() {
        
         return this.salary;
     }
 
-    public int noOfLeaveDays() {
-    	System.out.println ("Enter the no of leave days:");
-    	Scanner sc = new Scanner (System.in);
-   	this.leavedays=sc.nextInt();
+    public byte noOfLeaveDays() {
+	this.leavedays=(byte) ((Math.random() * (5 - 0)) +0);
         return this.leavedays;
     }
     public void printTeacher(){
@@ -50,23 +50,21 @@ class Teacher extends Person {
 }
 
 class Student extends Person {
-    private int latedays;
-    private double fees;
-    public Student(String name, Address address, int age, String gender,double fees) {
+    private byte latedays;
+    private int fees;
+    public Student(String name, Address address, byte age, byte gender,int fees) {
         super(name, address, age, gender);
         this.latedays = 0;
         this.fees=fees;
     }
 
 
-    public int getNumberOfLateDays() {
-    	System.out.println ("Enter the no of late days:");
-    	Scanner sc = new Scanner (System.in);
-   	this.latedays=sc.nextInt();
+    public byte getNumberOfLateDays() {
+    	this.latedays=(byte) ((Math.random() * (20 - 0)) +0);
         return this.latedays;
     }
 
-    public double getMonthlyFee() {
+    public int getMonthlyFee() {
     	
         return this.fees;
     }
@@ -76,39 +74,74 @@ class Student extends Person {
 }
 
 class School {
-    private static ArrayList<Teacher> teachers = new ArrayList<>();
-    private static ArrayList<Student> students = new ArrayList<>();
-    public static void showTeacher() {
-        for (Teacher teacher : teachers) {
+    String name;
+    String address;
+    private ArrayList<Teacher> teachers = new ArrayList<>();
+    private ArrayList<Student> students = new ArrayList<>();
+    public School(String name, String add) {
+        this.name = name;
+        this.address= address;
+    }
+    public  void showTeacher() {
+        for (Teacher teacher : this.teachers) {
             teacher.printTeacher();
         }
     }
-    public static void showStudent() {
-        for (Student student : students) 
+    public void showStudent() {
+        for (Student student : this.students) 
             student.printStudent();
     }
-    public static void addTeacher(Teacher teacher) {
-        teachers.add(teacher);
-        System.out.println(teacher.name+"added succesfully");
+    public void addTeacher(Teacher teacher) {
+        this.teachers.add(teacher);
+        System.out.println(teacher.name+" added succesfully");
     }
 
-    public static void addStudent(Student student) {
-        students.add(student);
+    public void addStudent(Student student) {
+        this.students.add(student);
+        System.out.println(student.name+" added succesfully");
     }
+    public void printSchool(){
+        System.out.println("\nschool name : "+this.name+"\nAddress : "+this.address);
+    }
+    public float calculateMonthlyProfit() {
+        float totalFeeCollected = 0;
+        float totalSalaryPaid = 0;
 
-    public static double calculateMonthlyProfit() {
-        double totalFeeCollected = 0.0;
-        double totalSalaryPaid = 0.0;
-
-        for (Teacher teacher : teachers) {
+        for (Teacher teacher : this.teachers) {
             totalSalaryPaid += teacher.getMonthlySalary() - (teacher.noOfLeaveDays() * (teacher.getMonthlySalary() / 30));
         }
 
-        for (Student student : students) {
+        for (Student student : this.students) {
             totalFeeCollected += student.getMonthlyFee() + (student.getNumberOfLateDays() * 5);
         }
 
         return totalFeeCollected - totalSalaryPaid;
+    }
+}
+
+class Schools{
+    
+    private static ArrayList<School> schools= new ArrayList<>();
+   
+    public static void showSchool() {
+        for (School school : schools) 
+            school.printSchool();
+    }
+    public static void addSchool(School school) {
+        schools.add(school);
+        System.out.println("School added succesfully");
+    }
+
+   
+
+    public static School getSchool(String name) {
+        
+        for (School school : schools) {
+            if(name.equals(school.name))
+            	return school;
+        }
+
+        return null;
     }
 }
 
